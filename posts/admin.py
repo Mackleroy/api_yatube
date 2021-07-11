@@ -1,7 +1,8 @@
 from django.contrib import admin
-from .models import Post
+from .models import Post, Comment, Answer
 
 
+@admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
     list_display = ("pk", "text", "pub_date", "author")
     search_fields = ("text",)
@@ -9,5 +10,17 @@ class PostAdmin(admin.ModelAdmin):
     empty_value_display = '-пусто-'
 
 
-# при регистрации модели Post источником конфигурации для неё назначаем класс PostAdmin
-admin.site.register(Post, PostAdmin)
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ("pk", "text", "created", "author")
+    search_fields = ("text",)
+    list_filter = ("created",)
+    empty_value_display = '-пусто-'
+
+
+@admin.register(Answer)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ("pk", "text", "created", "author")
+    search_fields = ("text",)
+    list_filter = ("created",)
+    empty_value_display = '-пусто-'

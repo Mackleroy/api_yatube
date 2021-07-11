@@ -5,6 +5,7 @@ User = get_user_model()
 
 
 class Post(models.Model):
+    title = models.TextField()
     text = models.TextField()
     pub_date = models.DateTimeField("Дата публикации", auto_now_add=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE,
@@ -23,3 +24,16 @@ class Comment(models.Model):
     text = models.TextField()
     created = models.DateTimeField("Дата добавления", auto_now_add=True,
                                    db_index=True)
+
+
+class Answer(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE,
+                               related_name="answer")
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE,
+                                related_name='answer')
+    text = models.TextField()
+    created = models.DateTimeField("Дата добавления", auto_now_add=True,
+                                   db_index=True)
+
+    def __str__(self):
+        return self.text
