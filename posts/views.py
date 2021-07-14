@@ -1,9 +1,11 @@
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, filters
 from rest_framework.response import Response
-# from rest_framework import permissions
+
+from django_filters.rest_framework import DjangoFilterBackend
 
 from django.shortcuts import get_object_or_404
 
+from posts.filters import PostDateFilter
 from posts.models import Post, Comment, Answer
 from posts.permissions import IsAuthorOrReadOnly
 from posts.serialaizer import PostSerializer, CommentSerializer, AnswerSerializer
@@ -13,52 +15,8 @@ class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     permission_classes = [IsAuthorOrReadOnly]
-
-# class PostViewSet(viewsets.ViewSet):
-#     def list(self, request):
-#         posts = Post.objects.all()
-#         serializer = PostSerializer(posts, many=True)
-#         return Response(serializer.data, status=status.HTTP_200_OK)
-#
-#     def create(self, request):
-#         serializer = PostSerializer(data=request.data)
-#         if serializer.is_valid():
-#             serializer.save(author=request.user)
-#             return Response(serializer.data, status=status.HTTP_200_OK)
-#         return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
-#
-#     def retrieve(self, request, pk=None):
-#         post = Post.objects.get(id=pk)
-#         serializer = PostSerializer(post)
-#         return Response(serializer.data, status=status.HTTP_200_OK)
-#
-#     def update(self, request, pk=None):
-#         post = Post.objects.get(id=pk)
-#         serializer = PostSerializer(post, data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data, status=status.HTTP_200_OK)
-#         return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
-#
-#     def partial_update(self, request, pk=None):
-#         post = Post.objects.get(id=pk)
-#         serializer = PostSerializer(post, data=request.data, partial=True)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data, status=status.HTTP_200_OK)
-#         return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
-#
-#     def destroy(self, request, pk=None):
-#         post = Post.objects.get(id=pk)
-#         post.delete()
-#         return Response(status=status.HTTP_200_OK)
-#
-#     def get_permissions(self):
-#         if self.request.method in permissions.SAFE_METHODS:
-#             permission_classes = [permissions.AllowAny]
-#         else:
-#             permission_classes = [permissions.IsAuthenticated, IsAuthorOrReadOnly]
-#         return [permission() for permission in permission_classes]
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = PostDateFilter
 
 
 class CommentsViewSet(viewsets.ViewSet):
